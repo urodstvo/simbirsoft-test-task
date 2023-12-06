@@ -18,13 +18,13 @@
         "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "noFallthroughCasesInSwitch": true
+        "noFallthroughCasesInSwitch": true,
+
+        "types": ["node"],
+        "paths": {
+            "@/*": ["./src/*"]
+        }
     },
     "include": ["src", "postcss.config.js"],
-    "references": [{ "path": "./tsconfig.node.json" }],
-
-    "types": ["node"],
-    "paths": {
-        "@/*": ["./src/*"]
-    }
+    "references": [{ "path": "./tsconfig.node.json" }]
 }

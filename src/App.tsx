@@ -1,3 +1,10 @@
+import { useRoutes } from "react-router-dom";
+
 export function App() {
-  return <></>;
+    return useRoutes([
+        {
+            path: "/",
+            element: <div>Hello</div>
+        }
+    ]);
 }
