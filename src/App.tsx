@@ -1,10 +1,41 @@
 import { useRoutes } from "react-router-dom";
 
+import { Template } from "./pages";
+import { Leagues } from "./pages/Leagues";
+import { LeaguesCalendar } from "./pages/LeaguesCalendar";
+import { Teams } from "./pages/Teams";
+import { TeamsCalendar } from "./pages/TeamsCalendar";
+
 export function App() {
-    return useRoutes([
+    const router = useRoutes([
         {
             path: "/",
-            element: <div>Hello</div>
+            element: <Template />,
+            children: [
+                {
+                    index: true,
+                    element: <Leagues />
+                },
+                {
+                    path: "league/:leagueId",
+                    element: <LeaguesCalendar />
+                },
+                {
+                    path: "teams",
+                    element: <Teams />
+                },
+                {
+                    path: "team/:teamId",
+                    element: <TeamsCalendar />
+                }
+            ]
+        },
+
+        {
+            path: "*",
+            element: <div>404</div>
         }
     ]);
+
+    return router;
 }
