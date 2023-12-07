@@ -35,6 +35,9 @@ export const Api = createApi({
         }),
         getTeamById: builder.query<Team, string | number>({
             query: (id) => `/teams/${id}`
+        }),
+        getLeagueById: builder.query<Team, string | number>({
+            query: (id) => `/competitions/${id}`
         })
     })
 });
@@ -44,5 +47,6 @@ export const {
     useGetAllTeamsQuery,
     useGetMatchesByLeagueIdQuery,
     useGetMatchesByTeamIdQuery,
-    useGetTeamByIdQuery
+    useGetTeamByIdQuery,
+    useGetLeagueByIdQuery
 } = Api;

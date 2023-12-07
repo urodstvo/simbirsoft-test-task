@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { MantineProvider, createTheme } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import { Notifications } from "@mantine/notifications";
 import "@mantine/notifications/styles.css";
 
 import { App } from "@/App.tsx";
@@ -19,6 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <BrowserRouter>
             <MantineProvider theme={theme}>
                 <Provider store={store}>
+                    <Notifications />
                     <App />
                 </Provider>
             </MantineProvider>
