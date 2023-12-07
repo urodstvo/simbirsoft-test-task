@@ -66,7 +66,7 @@ export const Teams: FC = () => {
                 {isSuccess && (
                     <>
                         <SimpleGrid cols={5}>
-                            {visibleTeams.map((team, ind) => (
+                            {visibleTeams.map((team) => (
                                 <TeamCard {...team} key={team.id} />
                             ))}
                         </SimpleGrid>

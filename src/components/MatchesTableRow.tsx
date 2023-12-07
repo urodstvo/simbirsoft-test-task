@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import { Badge, Table } from "@mantine/core";
 
@@ -31,6 +31,7 @@ export const MatchesTableRow: FC<{ match: Match }> = ({ match }) => {
         fulltime_score = `${match.score.fullTime.home}:${match.score.fullTime.away}`;
     else fulltime_score = "0:0";
 
+    const dispatch = useAppDispatch();
     return (
         <Table.Tr key={match.id}>
             <Table.Td w={100}>{formattedDate}</Table.Td>
@@ -40,33 +41,39 @@ export const MatchesTableRow: FC<{ match: Match }> = ({ match }) => {
                     {MatchStatus[match.status as keyof typeof MatchStatus]}
                 </Badge>
             </Table.Td>
-            <Table.Td w={250}>
+            <Table.Td
+                w={250}
+                onClick={(e) => {
+                    e.preventDefault();
+                    dispatch(setTeam(match.homeTeam));
+                }}
+            >
                 {match.homeTeam.name ? (
-                    <Link
+                    <NavLink
                         to={`/team/${match.homeTeam.id}`}
                         style={{ color: "#000" }}
-                        onClick={() =>
-                            useAppDispatch()(setTeam(match.homeTeam))
-                        }
                     >
-                        {match.homeTeam.shortName}
-                    </Link>
+                        {match.homeTeam.name}
+                    </NavLink>
                 ) : (
                     "TBA"
                 )}
             </Table.Td>
             <Table.Td w={100}>—</Table.Td>
-            <Table.Td w={250}>
+            <Table.Td
+                w={250}
+                onClick={(e) => {
+                    e.preventDefault();
+                    dispatch(setTeam(match.awayTeam));
+                }}
+            >
                 {match.awayTeam ? (
-                    <Link
+                    <NavLink
                         to={`/team/${match.awayTeam.id}`}
                         style={{ color: "#000" }}
-                        onClick={() =>
-                            useAppDispatch()(setTeam(match.awayTeam))
-                        }
                     >
-                        {match.awayTeam.shortName}
-                    </Link>
+                        {match.awayTeam.name}
+                    </NavLink>
                 ) : (
                     "TBA"
                 )}

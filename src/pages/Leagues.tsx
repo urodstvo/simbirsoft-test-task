@@ -20,7 +20,7 @@ import { SearchIcon } from "@/components/icons/SearchIcon";
 import { Competition } from "@/types/League";
 
 export const Leagues: FC = () => {
-    const { data, isLoading, isSuccess, isError, refetch } =
+    const { data, isFetching, isSuccess, isError, refetch } =
         useGetAllCompetitionsQuery();
 
     const [visibleLeagues, setVisibleLeagues] = useState<Competition[]>([]);
@@ -53,7 +53,7 @@ export const Leagues: FC = () => {
                     size="sm"
                     placeholder="Поиск"
                     rightSection={<SearchIcon />}
-                    disabled={isLoading || isError}
+                    disabled={isFetching || isError}
                 />
             </Box>
             <Flex
@@ -66,12 +66,8 @@ export const Leagues: FC = () => {
                 {isSuccess && (
                     <>
                         <SimpleGrid cols={3}>
-                            {visibleLeagues.map((league, ind) => (
-                                <LeagueCard
-                                    league={league}
-                                    opened
-                                    key={league.id}
-                                />
+                            {visibleLeagues.map((league) => (
+                                <LeagueCard league={league} key={league.id} />
                             ))}
                         </SimpleGrid>
                         <Center w="100%" p={16}>
@@ -83,7 +79,7 @@ export const Leagues: FC = () => {
                         </Center>
                     </>
                 )}
-                {isLoading && (
+                {isFetching && (
                     <Container>
                         <Loader />
                     </Container>

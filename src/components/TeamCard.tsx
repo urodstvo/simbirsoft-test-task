@@ -15,8 +15,9 @@ export const TeamCard: FC<Team> = (props) => {
             component="article"
             w={"100%"}
             style={{ border: "1px solid #000" }}
+            onClick={() => dispatch(setTeam(props))}
         >
-            <Link to={`/team/${id}`} onClick={() => dispatch(setTeam(props))}>
+            <Link to={`/team/${id}`}>
                 <Stack
                     w="100%"
                     align="center"

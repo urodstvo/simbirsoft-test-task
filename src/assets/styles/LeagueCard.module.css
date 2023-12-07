@@ -1,13 +1,15 @@
 .Container {
     width: 100%;
-    border: 1px solid #000;
+    border: 1px solid #aaa;
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
-    transition:
+    border-radius: 15px;
+    /* transition:
         box-shadow 0.2s ease,
-        transform 0.2s ease;
+        transform 0.2s ease; */
 
+    /* 
     &:hover {
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
         transform: scale(1.05);
-    }
+    } */
 }
