@@ -1,4 +1,4 @@
-import { FC, useEffect, useLayoutEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import {
@@ -18,69 +18,39 @@ import { useGetMatchesByLeagueIdQuery } from "@/api";
 import { MatchesTableRow } from "@/components/MatchesTableRow";
 import { BreadCrumbsSeparatorIcon } from "@/components/icons/BreadCrumbsSeparatorIcon";
 import { CalendarIcon } from "@/components/icons/CalendarIcon";
-import { useAppSelector } from "@/store";
+import { useCheckLeague } from "@/hooks";
 import "dayjs/locale/ru";
 
-type getMatchesProps = {
-    id: string | number;
-    from: string;
-    to: string;
-};
-
 export const LeaguesCalendar: FC = () => {
-    const { selectedLeague: league } = useAppSelector((state) => state.leagues);
-    const { leagueId } = useParams();
+    const { league, isFetching: isLeagueFetching } = useCheckLeague();
 
+    const { leagueId } = useParams();
     const [page, setPage] = useState(1);
 
     const [dateFrom, setDateFrom] = useState<DateValue>();
     const [dateTo, setDateTo] = useState<DateValue>();
 
-    const [minDate, setMinDate] = useState<string>();
-    const [maxDate, setMaxDate] = useState<string>();
-    const [queryCount, setQueryCount] = useState<number>(0);
+    const [minDate, setMinDate] = useState<string>("");
+    const [maxDate, setMaxDate] = useState<string>("");
 
-    const [queryProps, setQueryProps] = useState<getMatchesProps>({
-        id: leagueId as string,
-        from: "",
-        to: ""
-    });
+    const [isFirstQuery, setIsFirstQuery] = useState<boolean>(true);
 
-    const { data, isSuccess, isLoading, isError, refetch } =
-        useGetMatchesByLeagueIdQuery(queryProps);
-
-    useEffect(() => {
-        if (dateFrom)
-            setQueryProps((prev) => ({
-                ...prev,
-                from: dateFrom.toISOString().substring(0, 10)
-            }));
-    }, [dateFrom]);
+    const { data, isSuccess, isFetching, isError, refetch } =
+        useGetMatchesByLeagueIdQuery({
+            id: leagueId as string,
+            from: dateFrom?.toISOString().substring(0, 10) ?? minDate,
+            to: dateTo?.toISOString().substring(0, 10) ?? maxDate
+        });
 
     useEffect(() => {
-        if (dateTo)
-            setQueryProps((prev) => ({
-                ...prev,
-                to: dateTo.toISOString().substring(0, 10)
-            }));
-    }, [dateTo]);
-
-    useLayoutEffect(() => {
         if (data) {
-            if (queryCount === 0) {
-                const minDate = data.resultSet.first;
-                const maxDate = data.resultSet.last;
-                setMinDate(minDate);
-                setMaxDate(maxDate);
-                setQueryCount((prev) => prev + 1);
-                setQueryProps((prev) => ({
-                    ...prev,
-                    from: minDate,
-                    to: maxDate
-                }));
+            if (isFirstQuery) {
+                setMinDate(data.resultSet.first);
+                setMaxDate(data.resultSet.last);
+                setIsFirstQuery(false);
             }
         }
-    }, [data]);
+    }, [isSuccess]);
 
     return (
         <Flex
@@ -96,10 +66,8 @@ export const LeaguesCalendar: FC = () => {
                 <Breadcrumbs separator={<BreadCrumbsSeparatorIcon />}>
                     <Link to="/">Лиги</Link>
                     <span>
-                        {league
-                            ? league.name
-                            : (isSuccess && data && data.competition.name) ||
-                              (isLoading && <Loader size="xs" />)}
+                        {league && league.name}
+                        {isLeagueFetching && <Loader size="xs" />}
                     </span>
                 </Breadcrumbs>
             </Box>
@@ -130,9 +98,11 @@ export const LeaguesCalendar: FC = () => {
                                 maxDate={
                                     new Date(Date.parse(maxDate as string))
                                 }
+                                disabled={!isSuccess}
                             />
                             по
                             <DatePickerInput
+                                disabled={!isSuccess}
                                 w={200}
                                 size="sm"
                                 placeholder="дд.мм.гггг"
@@ -159,7 +129,7 @@ export const LeaguesCalendar: FC = () => {
                     rowGap={16}
                     mt={16}
                 >
-                    {isSuccess && data && (
+                    {!isFetching && data && (
                         <>
                             <Table withTableBorder>
                                 <Table.Tbody>
@@ -185,7 +155,7 @@ export const LeaguesCalendar: FC = () => {
                             </Center>
                         </>
                     )}
-                    {isLoading && (
+                    {isFetching && (
                         <Center>
                             <Loader />
                         </Center>

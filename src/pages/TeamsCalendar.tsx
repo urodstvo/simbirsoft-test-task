@@ -1,5 +1,5 @@
-import { FC, useEffect, useLayoutEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { FC, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 import {
     Box,
@@ -14,85 +14,43 @@ import {
 } from "@mantine/core";
 import { DatePickerInput, DateValue, DatesProvider } from "@mantine/dates";
 
-import { useGetMatchesByTeamIdQuery, useGetTeamByIdQuery } from "@/api";
+import { useGetMatchesByTeamIdQuery } from "@/api";
 import { MatchesTableRow } from "@/components/MatchesTableRow";
 import { BreadCrumbsSeparatorIcon } from "@/components/icons/BreadCrumbsSeparatorIcon";
 import { CalendarIcon } from "@/components/icons/CalendarIcon";
-import { useAppSelector } from "@/store";
+import { useCheckTeam } from "@/hooks";
 import "dayjs/locale/ru";
 
-type getMatchesProps = {
-    id: string | number;
-    from: string;
-    to: string;
-};
-
 export const TeamsCalendar: FC = () => {
-    const navigate = useNavigate();
-    const { selectedTeam: team } = useAppSelector((state) => state.teams);
+    const { team, isFetching: isTeamFetching } = useCheckTeam();
+
     const { teamId } = useParams();
-
-    const {
-        data: teamData,
-        isError: isTeamError,
-        isLoading: isTeamLoading
-    } = useGetTeamByIdQuery(teamId as string, {
-        skip: !!team
-    });
-    useEffect(() => {
-        if (isTeamError) return navigate("/teams");
-    }, [isTeamError]);
-
     const [page, setPage] = useState(1);
 
     const [dateFrom, setDateFrom] = useState<DateValue>();
     const [dateTo, setDateTo] = useState<DateValue>();
 
-    const [minDate, setMinDate] = useState<string>();
-    const [maxDate, setMaxDate] = useState<string>();
-    const [queryCount, setQueryCount] = useState<number>(0);
+    const [minDate, setMinDate] = useState<string>("");
+    const [maxDate, setMaxDate] = useState<string>("");
 
-    const [queryProps, setQueryProps] = useState<getMatchesProps>({
-        id: teamId as string,
-        from: "",
-        to: ""
-    });
+    const [isFirstQuery, setIsFirstQuery] = useState<boolean>(true);
 
-    const { data, isSuccess, isLoading, isError, refetch } =
-        useGetMatchesByTeamIdQuery(queryProps);
-
-    useEffect(() => {
-        if (dateFrom)
-            setQueryProps((prev) => ({
-                ...prev,
-                from: dateFrom.toISOString().substring(0, 10)
-            }));
-    }, [dateFrom]);
+    const { data, isSuccess, isError, isFetching, refetch } =
+        useGetMatchesByTeamIdQuery({
+            id: teamId as string,
+            from: dateFrom?.toISOString().substring(0, 10) ?? minDate,
+            to: dateTo?.toISOString().substring(0, 10) ?? maxDate
+        });
 
     useEffect(() => {
-        if (dateTo)
-            setQueryProps((prev) => ({
-                ...prev,
-                to: dateTo.toISOString().substring(0, 10)
-            }));
-    }, [dateTo]);
-
-    useLayoutEffect(() => {
         if (data) {
-            if (queryCount === 0) {
-                const minDate = data.resultSet.first;
-                const maxDate = data.resultSet.last;
-                setMinDate(minDate);
-                setMaxDate(maxDate);
-                setQueryCount((prev) => prev + 1);
-                setQueryProps((prev) => ({
-                    ...prev,
-                    from: minDate,
-                    to: maxDate
-                }));
+            if (isFirstQuery) {
+                setMinDate(data.resultSet.first);
+                setMaxDate(data.resultSet.last);
+                setIsFirstQuery(false);
             }
         }
-    }, [data]);
+    }, [isSuccess]);
 
     return (
         <Flex
@@ -106,10 +64,10 @@ export const TeamsCalendar: FC = () => {
         >
             <Box w="100%">
                 <Breadcrumbs separator={<BreadCrumbsSeparatorIcon />}>
-                    <Link to="/">Команды</Link>
+                    <Link to="/teams">Команды</Link>
                     <span>
-                        {teamData ? teamData.name : team && team.name}
-                        {isTeamLoading && <Loader size="xs" />}
+                        {team && team.name}
+                        {isTeamFetching && <Loader size="xs" />}
                     </span>
                 </Breadcrumbs>
             </Box>
@@ -140,6 +98,7 @@ export const TeamsCalendar: FC = () => {
                                 maxDate={
                                     new Date(Date.parse(maxDate as string))
                                 }
+                                disabled={!isSuccess}
                             />
                             по
                             <DatePickerInput
@@ -156,6 +115,7 @@ export const TeamsCalendar: FC = () => {
                                 maxDate={
                                     new Date(Date.parse(maxDate as string))
                                 }
+                                disabled={!isSuccess}
                             />
                         </DatesProvider>
                     </Flex>
@@ -169,7 +129,7 @@ export const TeamsCalendar: FC = () => {
                     rowGap={16}
                     mt={16}
                 >
-                    {isSuccess && data && (
+                    {!isFetching && data && (
                         <>
                             <Table withTableBorder>
                                 <Table.Tbody>
@@ -195,7 +155,7 @@ export const TeamsCalendar: FC = () => {
                             </Center>
                         </>
                     )}
-                    {isLoading && (
+                    {isFetching && (
                         <Center>
                             <Loader />
                         </Center>
