@@ -5,7 +5,7 @@
   "plugins": [
     "@trivago/prettier-plugin-sort-imports"
   ],
-  "importOrder": ["^react", "^.(css|scss)$", "<THIRD_PARTY_MODULES>", "^components/(.*)$", "^[./]"],
+  "importOrder": ["^react", "^@mantine", "^.(css|scss)$", "<THIRD_PARTY_MODULES>", "^components/(.*)$", "^[./]"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true
 }
