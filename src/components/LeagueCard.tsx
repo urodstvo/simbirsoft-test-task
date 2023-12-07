@@ -1,17 +1,16 @@
 import { FC } from "react";
 import { Link } from "react-router-dom";
 
-import { Container, Stack, Text, Transition } from "@mantine/core";
+import { Stack, Text } from "@mantine/core";
 
+import { CardRenderAnimation } from "@/animation/animation";
 import styles from "@/assets/styles/LeagueCard.module.css";
 import { useAppDispatch } from "@/store";
 import { setLeague } from "@/store/slices/league";
 import { Competition } from "@/types/League";
+import { motion } from "framer-motion";
 
-export const LeagueCard: FC<{ league: Competition; opened: boolean }> = ({
-    league,
-    opened
-}) => {
+export const LeagueCard: FC<{ league: Competition }> = ({ league }) => {
     const {
         code,
         name,
@@ -19,7 +18,11 @@ export const LeagueCard: FC<{ league: Competition; opened: boolean }> = ({
     } = league;
     const dispatch = useAppDispatch();
     return (
-        <Container component="article" className={styles.Container}>
+        <motion.article
+            layout
+            className={styles.Container}
+            {...CardRenderAnimation}
+        >
             <Link
                 to={`/league/${code}`}
                 onClick={() => dispatch(setLeague(league))}
@@ -35,6 +38,6 @@ export const LeagueCard: FC<{ league: Competition; opened: boolean }> = ({
                     <Text c="#888">{areaName}</Text>
                 </Stack>
             </Link>
-        </Container>
+        </motion.article>
     );
 };
