@@ -1,9 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { Box, Breadcrumbs, Button, Center, Flex, Loader, Pagination, Title } from "@mantine/core";
+import { Box, Breadcrumbs, Center, Flex, Loader, Pagination, Title } from "@mantine/core";
 import { DatePickerInput, DateValue, DatesProvider } from "@mantine/dates";
-import { useMediaQuery } from "@mantine/hooks";
 
 import { useGetMatchesByLeagueIdQuery } from "@/api";
 import styles from "@/assets/styles/LeaguesCalendar.module.css";
@@ -11,11 +10,13 @@ import { ErrorMessage } from "@/components/ErrorMessage";
 import { MatchesTable } from "@/components/MatchesTable";
 import { BreadCrumbsSeparatorIcon } from "@/components/icons/BreadCrumbsSeparatorIcon";
 import { CalendarIcon } from "@/components/icons/CalendarIcon";
-import { useCheckLeague } from "@/hooks";
+import { useCheckLeague, useSetTitle } from "@/hooks";
 import "dayjs/locale/ru";
 
 export const LeaguesCalendar: FC = () => {
     const { league, isFetching: isLeagueFetching } = useCheckLeague();
+
+    useSetTitle("Календарь лиги " + league?.name);
 
     const { leagueId } = useParams();
     const [page, setPage] = useState(1);

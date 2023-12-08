@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { Box, Breadcrumbs, Button, Center, Flex, Loader, Pagination, Title } from "@mantine/core";
+import { Box, Breadcrumbs, Center, Flex, Loader, Pagination, Title } from "@mantine/core";
 import { DatePickerInput, DateValue, DatesProvider } from "@mantine/dates";
 
 import { useGetMatchesByTeamIdQuery } from "@/api";
@@ -9,11 +9,13 @@ import { ErrorMessage } from "@/components/ErrorMessage";
 import { MatchesTable } from "@/components/MatchesTable";
 import { BreadCrumbsSeparatorIcon } from "@/components/icons/BreadCrumbsSeparatorIcon";
 import { CalendarIcon } from "@/components/icons/CalendarIcon";
-import { useCheckTeam } from "@/hooks";
+import { useCheckTeam, useSetTitle } from "@/hooks";
 import "dayjs/locale/ru";
 
 export const TeamsCalendar: FC = () => {
     const { team, isFetching: isTeamFetching } = useCheckTeam();
+
+    useSetTitle("Календарь команды " + team?.name);
 
     const { teamId } = useParams();
     const [page, setPage] = useState(1);

@@ -7,6 +7,7 @@ import { useGetAllTeamsQuery } from "@/api";
 import { ErrorMessage } from "@/components/ErrorMessage";
 import { TeamCard } from "@/components/TeamCard";
 import { SearchIcon } from "@/components/icons/SearchIcon";
+import { useSetTitle } from "@/hooks";
 import type { Team } from "@/types/Team";
 
 const filterTeams = (data: Team[], searchValue: string) => {
@@ -16,6 +17,7 @@ const filterTeams = (data: Team[], searchValue: string) => {
     return searchedTeams;
 };
 export const Teams: FC = () => {
+    useSetTitle("Команды");
     const { data, isLoading, isSuccess, isError, refetch } = useGetAllTeamsQuery();
 
     const [searchValue, setSearchValue] = useInputState<string>("");

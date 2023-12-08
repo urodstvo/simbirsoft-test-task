@@ -8,6 +8,7 @@ import styles from "@/assets/styles/Leagues.module.css";
 import { ErrorMessage } from "@/components/ErrorMessage";
 import { LeagueCard } from "@/components/LeagueCard";
 import { SearchIcon } from "@/components/icons/SearchIcon";
+import { useSetTitle } from "@/hooks";
 import { Competition } from "@/types/League";
 
 const filterLeagues = (data: Competition[], searchValue: string) => {
@@ -18,6 +19,8 @@ const filterLeagues = (data: Competition[], searchValue: string) => {
 };
 
 export const Leagues: FC = () => {
+    useSetTitle("Лиги");
+
     const { data, isFetching, isSuccess, isError, refetch } = useGetAllCompetitionsQuery();
 
     const [searchValue, setSearchValue] = useInputState<string>("");
