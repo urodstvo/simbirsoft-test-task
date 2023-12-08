@@ -1,41 +1,40 @@
 import { FC, useEffect, useState } from "react";
 
-import {
-    Box,
-    Button,
-    Center,
-    Container,
-    Flex,
-    Loader,
-    Pagination,
-    SimpleGrid,
-    Text,
-    TextInput,
-    Title
-} from "@mantine/core";
+import { Box, Center, Container, Flex, Loader, Pagination, SimpleGrid, TextInput } from "@mantine/core";
+import { useDebouncedValue, useInputState } from "@mantine/hooks";
 
 import { useGetAllTeamsQuery } from "@/api";
+import { ErrorMessage } from "@/components/ErrorMessage";
 import { TeamCard } from "@/components/TeamCard";
 import { SearchIcon } from "@/components/icons/SearchIcon";
-import { Team } from "@/types/Team";
+import type { Team } from "@/types/Team";
 
+const filterTeams = (data: Team[], searchValue: string) => {
+    const searchedTeams = data.filter((team) => {
+        return team.name.toLowerCase().includes(searchValue.toLowerCase());
+    });
+    return searchedTeams;
+};
 export const Teams: FC = () => {
-    const { data, isLoading, isSuccess, isError, refetch } =
-        useGetAllTeamsQuery();
+    const { data, isLoading, isSuccess, isError, refetch } = useGetAllTeamsQuery();
+
+    const [searchValue, setSearchValue] = useInputState<string>("");
+    const [debouncedSearchValue] = useDebouncedValue(searchValue, 300);
 
     const [visibleTeams, setVisibleTeams] = useState<Team[]>([]);
     const [page, setPage] = useState<number>(1);
 
     useEffect(() => {
-        if (data) setVisibleTeams(data.teams.slice(0, 10));
+        if (data) setVisibleTeams(data.teams);
     }, [isSuccess]);
 
     useEffect(() => {
-        if (data)
-            setVisibleTeams(
-                data.teams.slice(0 + 10 * (page - 1), 10 + 10 * (page - 1))
-            );
-    }, [page]);
+        if (data) {
+            const filteredTeams = filterTeams(data.teams, debouncedSearchValue);
+            setVisibleTeams(filteredTeams);
+            setPage(1);
+        }
+    }, [debouncedSearchValue]);
 
     return (
         <Flex
@@ -54,28 +53,20 @@ export const Teams: FC = () => {
                     placeholder="Поиск"
                     rightSection={<SearchIcon />}
                     disabled={isLoading || isError}
+                    value={searchValue}
+                    onChange={setSearchValue}
                 />
             </Box>
-            <Flex
-                direction="column"
-                justify="space-between"
-                columnGap={16}
-                rowGap={32}
-                h="100%"
-            >
+            <Flex direction="column" justify="space-between" columnGap={16} rowGap={32} h="100%">
                 {isSuccess && (
                     <>
-                        <SimpleGrid cols={5}>
-                            {visibleTeams.map((team) => (
+                        <SimpleGrid cols={{ sm: 2, md: 3, xl: 5 }}>
+                            {visibleTeams.slice(0 + 10 * (page - 1), 10 + 10 * (page - 1)).map((team) => (
                                 <TeamCard {...team} key={team.id} />
                             ))}
                         </SimpleGrid>
                         <Center w="100%" p={16}>
-                            <Pagination
-                                total={Math.ceil(data.count / 10)}
-                                size="md"
-                                onChange={setPage}
-                            />
+                            <Pagination total={Math.ceil(visibleTeams.length / 10)} size="md" onChange={setPage} />
                         </Center>
                     </>
                 )}
@@ -84,24 +75,7 @@ export const Teams: FC = () => {
                         <Loader />
                     </Container>
                 )}
-                {isError && (
-                    <Flex
-                        h="100%"
-                        direction="column"
-                        justify="center"
-                        align="center"
-                    >
-                        <Title size="h2">
-                            Произошла ошибка при загрузке команд
-                        </Title>
-                        <Text size="h4" c="#444">
-                            Попробуйте немного подождать и попробовать снова
-                        </Text>
-                        <Button mt={64} onClick={refetch}>
-                            Попробовать ещё раз
-                        </Button>
-                    </Flex>
-                )}
+                {isError && <ErrorMessage refetch={refetch} />}
             </Flex>
         </Flex>
     );

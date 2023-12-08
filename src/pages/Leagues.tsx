@@ -1,41 +1,42 @@
 import { FC, useEffect, useState } from "react";
 
-import {
-    Box,
-    Button,
-    Center,
-    Container,
-    Flex,
-    Loader,
-    Pagination,
-    SimpleGrid,
-    Text,
-    TextInput,
-    Title
-} from "@mantine/core";
+import { Box, Center, Container, Flex, Loader, Pagination, SimpleGrid, TextInput } from "@mantine/core";
+import { useDebouncedValue, useInputState } from "@mantine/hooks";
 
 import { useGetAllCompetitionsQuery } from "@/api";
+import styles from "@/assets/styles/Leagues.module.css";
+import { ErrorMessage } from "@/components/ErrorMessage";
 import { LeagueCard } from "@/components/LeagueCard";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { Competition } from "@/types/League";
 
+const filterLeagues = (data: Competition[], searchValue: string) => {
+    const searchedMatches = data.filter((league) => {
+        return league.name.toLowerCase().includes(searchValue.toLowerCase());
+    });
+    return searchedMatches;
+};
+
 export const Leagues: FC = () => {
-    const { data, isFetching, isSuccess, isError, refetch } =
-        useGetAllCompetitionsQuery();
+    const { data, isFetching, isSuccess, isError, refetch } = useGetAllCompetitionsQuery();
+
+    const [searchValue, setSearchValue] = useInputState<string>("");
+    const [debouncedSearchValue] = useDebouncedValue(searchValue, 300);
 
     const [visibleLeagues, setVisibleLeagues] = useState<Competition[]>([]);
     const [page, setPage] = useState<number>(1);
 
     useEffect(() => {
-        if (data) setVisibleLeagues(data.competitions.slice(0, 9));
+        if (data) setVisibleLeagues(data.competitions);
     }, [isSuccess]);
 
     useEffect(() => {
-        if (data)
-            setVisibleLeagues(
-                data.competitions.slice(0 + 9 * (page - 1), 9 + 9 * (page - 1))
-            );
-    }, [page]);
+        if (data) {
+            const filteredLeagues = filterLeagues(data.competitions, debouncedSearchValue);
+            setVisibleLeagues(filteredLeagues);
+            setPage(1);
+        }
+    }, [debouncedSearchValue]);
 
     return (
         <Flex
@@ -54,28 +55,20 @@ export const Leagues: FC = () => {
                     placeholder="Поиск"
                     rightSection={<SearchIcon />}
                     disabled={isFetching || isError}
+                    value={searchValue}
+                    onChange={setSearchValue}
                 />
             </Box>
-            <Flex
-                direction="column"
-                justify="space-between"
-                columnGap={16}
-                rowGap={32}
-                h="100%"
-            >
+            <Flex direction="column" justify="space-between" columnGap={16} rowGap={32} h="100%">
                 {isSuccess && (
                     <>
-                        <SimpleGrid cols={3}>
-                            {visibleLeagues.map((league) => (
+                        <SimpleGrid className={styles.Grid} cols={{ lg: 3, md: 2, sm: 1 }}>
+                            {visibleLeagues.slice(0 + 9 * (page - 1), 9 + 9 * (page - 1)).map((league) => (
                                 <LeagueCard league={league} key={league.id} />
                             ))}
                         </SimpleGrid>
                         <Center w="100%" p={16}>
-                            <Pagination
-                                total={Math.ceil(data.count / 9)}
-                                size="md"
-                                onChange={setPage}
-                            />
+                            <Pagination total={Math.ceil(visibleLeagues.length / 9)} size="md" onChange={setPage} />
                         </Center>
                     </>
                 )}
@@ -84,24 +77,7 @@ export const Leagues: FC = () => {
                         <Loader />
                     </Container>
                 )}
-                {isError && (
-                    <Flex
-                        h="100%"
-                        direction="column"
-                        justify="center"
-                        align="center"
-                    >
-                        <Title size="h2">
-                            Произошла ошибка при загрузке лиг
-                        </Title>
-                        <Text size="h4" c="#444">
-                            Попробуйте немного подождать и попробовать снова
-                        </Text>
-                        <Button mt={64} onClick={refetch}>
-                            Попробовать ещё раз
-                        </Button>
-                    </Flex>
-                )}
+                {isError && <ErrorMessage refetch={refetch} />}
             </Flex>
         </Flex>
     );
