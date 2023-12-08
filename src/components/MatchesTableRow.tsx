@@ -1,12 +1,13 @@
 import { FC } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-import { Badge, Table, Text } from "@mantine/core";
+import { Table, Text } from "@mantine/core";
 
+import { StatusBadge } from "@/components/StatusBadge";
 import { useAppDispatch } from "@/store";
 import { setTeam } from "@/store/slices/team";
-import type { Match } from "@/types/League";
-import { MatchStatus } from "@/types/League";
+import type { Match } from "@/types/Match";
+import { MatchStatus } from "@/types/Match";
 
 export const MatchesTableRow: FC<{ match: Match }> = ({ match }) => {
     const { utcDate } = match;
@@ -27,8 +28,7 @@ export const MatchesTableRow: FC<{ match: Match }> = ({ match }) => {
     const full_away = match.score.fullTime.away;
 
     let fulltime_score;
-    if (full_home && full_away)
-        fulltime_score = `${match.score.fullTime.home}:${match.score.fullTime.away}`;
+    if (full_home && full_away) fulltime_score = `${match.score.fullTime.home}:${match.score.fullTime.away}`;
     else fulltime_score = "0:0";
 
     const dispatch = useAppDispatch();
@@ -37,9 +37,7 @@ export const MatchesTableRow: FC<{ match: Match }> = ({ match }) => {
             <Table.Td>{formattedDate}</Table.Td>
             <Table.Td>{time}</Table.Td>
             <Table.Td>
-                <Badge color="green" size="md" radius="xs" c="#fff">
-                    {MatchStatus[match.status as keyof typeof MatchStatus]}
-                </Badge>
+                <StatusBadge variant={MatchStatus[match.status as keyof typeof MatchStatus]} />
             </Table.Td>
             <Table.Td
                 onClick={(e) => {
