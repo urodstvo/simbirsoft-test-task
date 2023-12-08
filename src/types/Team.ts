@@ -14,6 +14,6 @@ export type Team = {
 
 export type Teams = {
     count: number;
-    filters: any;
+    filters: unknown;
     teams: Array<Team>;
 };

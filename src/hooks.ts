@@ -12,7 +12,6 @@ export const useCheckTeam = () => {
     const { teamId } = useParams();
 
     const { selectedTeam } = useAppSelector((state) => state.teams);
-    if (selectedTeam) return { team: selectedTeam, isFetching: false };
 
     const { isError, isFetching, data } = useGetTeamByIdQuery(teamId as string, {
         skip: !!selectedTeam
@@ -30,6 +29,7 @@ export const useCheckTeam = () => {
         }
     }, [isError]);
 
+    if (selectedTeam) return { team: selectedTeam, isFetching: false };
     return { team: data, isFetching };
 };
 
@@ -38,7 +38,6 @@ export const useCheckLeague = () => {
     const { leagueId } = useParams();
 
     const { selectedLeague } = useAppSelector((state) => state.leagues);
-    if (selectedLeague) return { league: selectedLeague, isFetching: false };
 
     const { isError, isFetching, data } = useGetLeagueByIdQuery(leagueId as string, {
         skip: !!selectedLeague
@@ -56,6 +55,7 @@ export const useCheckLeague = () => {
         }
     }, [isError]);
 
+    if (selectedLeague) return { league: selectedLeague, isFetching: false };
     return { league: data, isFetching };
 };
 

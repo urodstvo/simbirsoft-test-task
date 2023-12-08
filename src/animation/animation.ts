@@ -1,4 +1,4 @@
-export const CardRenderAnimation: any = {
+export const CardRenderAnimation: object = {
     // layout: true,
     initial: { opacity: 0 },
     animate: { opacity: 1 },

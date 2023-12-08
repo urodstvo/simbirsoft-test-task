@@ -4,19 +4,19 @@ export type Competition = {
         id: number;
         name: string;
         code: string;
-        flag: any;
+        flag: unknown;
     };
     name: string;
     code: string;
     type: string;
-    emblem: any;
+    emblem: unknown;
     plan: string;
     currentSeason: {
         id: number;
         startDate: string;
         endDate: string;
         currentMatchday: number;
-        winner: any;
+        winner: unknown;
     };
     numberOfAvailableSeasons: number;
     lastUpdated: Date;

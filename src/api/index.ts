@@ -1,4 +1,5 @@
-import { Competitions, Matches } from "@/types/League";
+import type { Competitions } from "@/types/League";
+import type { Matches } from "@/types/Match";
 import type { Team, Teams } from "@/types/Team";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -19,19 +20,11 @@ export const Api = createApi({
         getAllTeams: builder.query<Teams, void>({
             query: () => `/teams`
         }),
-        getMatchesByLeagueId: builder.query<
-            Matches,
-            { id: string | number; from: string; to: string }
-        >({
-            query: ({ id, from, to }) =>
-                `/competitions/${id}/matches?dateFrom=${from}&dateTo=${to}`
+        getMatchesByLeagueId: builder.query<Matches, { id: string | number; from: string; to: string }>({
+            query: ({ id, from, to }) => `/competitions/${id}/matches?dateFrom=${from}&dateTo=${to}`
         }),
-        getMatchesByTeamId: builder.query<
-            Matches,
-            { id: string | number; from: string; to: string }
-        >({
-            query: ({ id, from, to }) =>
-                `/teams/${id}/matches?dateFrom=${from}&dateTo=${to}`
+        getMatchesByTeamId: builder.query<Matches, { id: string | number; from: string; to: string }>({
+            query: ({ id, from, to }) => `/teams/${id}/matches?dateFrom=${from}&dateTo=${to}`
         }),
         getTeamById: builder.query<Team, string | number>({
             query: (id) => `/teams/${id}`

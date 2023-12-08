@@ -1,7 +1,7 @@
 import { Competition } from "@/types/League";
 
 export type Matches = {
-    filters: any;
+    filters: object;
     resultSet: {
         count: number;
         first: string;
@@ -31,8 +31,8 @@ export type Match = {
         startDate: Date;
         endDate: Date;
         currentMatchday: number;
-        winner: any;
-        stages: Array<any>;
+        winner: unknown;
+        stages: Array<unknown>;
     };
     id: number;
     utcDate: Date;
@@ -43,7 +43,7 @@ export type Match = {
     venue: string;
     matchday: number;
     stage: string;
-    group: any;
+    group: unknown;
     lastUpdated: Date;
     homeTeam: Team;
     awayTeam: Team;
@@ -60,9 +60,9 @@ export type Match = {
         };
     };
     goals: Array<Goal>;
-    penalties: Array<any>;
-    bookings: Array<any>;
-    substitutions: Array<any>;
+    penalties: Array<unknown>;
+    bookings: Array<unknown>;
+    substitutions: Array<unknown>;
     odds: {
         homeWin: number;
         draw: number;
@@ -80,8 +80,8 @@ export type Team = {
     coach: Person;
     leagueRank: number;
     formation: string;
-    lineup: Array<any>;
-    bench: Array<any>;
+    lineup: Array<unknown>;
+    bench: Array<unknown>;
 };
 
 export type Person = {

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Button, Flex, Text, Title } from "@mantine/core";
 
-export const ErrorMessage: FC<{ refetch: () => any }> = ({ refetch }) => {
+export const ErrorMessage: FC<{ refetch: () => unknown }> = ({ refetch }) => {
     return (
         <Flex h="100%" w="100%" direction="column" justify="center" align="center">
             <Title size="h2" ta="center">
