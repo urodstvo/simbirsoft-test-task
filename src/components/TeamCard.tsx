@@ -5,17 +5,14 @@ import { Image, Stack, Text } from "@mantine/core";
 
 import { CardRenderAnimation } from "@/animation/animation";
 import styles from "@/assets/styles/TeamCard.module.css";
-import { useAppDispatch } from "@/store";
-import { setTeam } from "@/store/slices/team";
 import { Team } from "@/types/Team";
 import { motion } from "framer-motion";
 
 export const TeamCard: FC<Team> = (props) => {
     const { id, name, crest } = props;
-    const dispatch = useAppDispatch();
     return (
         <motion.article className={styles.Container} {...CardRenderAnimation}>
-            <Link to={`/team/${id}`} onClick={() => dispatch(setTeam(props))}>
+            <Link to={`/team/${id}`}>
                 <Stack className={styles.Content}>
                     <Text className={styles.Name}>{name}</Text>
                     <motion.div

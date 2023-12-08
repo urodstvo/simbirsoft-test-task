@@ -4,8 +4,6 @@ import { NavLink } from "react-router-dom";
 import { Table, Text } from "@mantine/core";
 
 import { StatusBadge } from "@/components/StatusBadge";
-import { useAppDispatch } from "@/store";
-import { setTeam } from "@/store/slices/team";
 import type { Match } from "@/types/Match";
 import { MatchStatus } from "@/types/Match";
 
@@ -31,7 +29,6 @@ export const MatchesTableRow: FC<{ match: Match }> = ({ match }) => {
     if (full_home && full_away) fulltime_score = `${match.score.fullTime.home}:${match.score.fullTime.away}`;
     else fulltime_score = "0:0";
 
-    const dispatch = useAppDispatch();
     return (
         <Table.Tr key={match.id}>
             <Table.Td>{formattedDate}</Table.Td>
@@ -39,12 +36,7 @@ export const MatchesTableRow: FC<{ match: Match }> = ({ match }) => {
             <Table.Td>
                 <StatusBadge variant={MatchStatus[match.status as keyof typeof MatchStatus]} />
             </Table.Td>
-            <Table.Td
-                onClick={(e) => {
-                    e.preventDefault();
-                    dispatch(setTeam(match.homeTeam));
-                }}
-            >
+            <Table.Td>
                 {match.homeTeam.name ? (
                     <NavLink to={`/team/${match.homeTeam.id}`}>
                         <Text c="#000">{match.homeTeam.name}</Text>
@@ -54,12 +46,7 @@ export const MatchesTableRow: FC<{ match: Match }> = ({ match }) => {
                 )}
             </Table.Td>
             <Table.Td>—</Table.Td>
-            <Table.Td
-                onClick={(e) => {
-                    e.preventDefault();
-                    dispatch(setTeam(match.awayTeam));
-                }}
-            >
+            <Table.Td>
                 {match.awayTeam ? (
                     <NavLink to={`/team/${match.awayTeam.id}`}>
                         <Text c="#000">{match.awayTeam.name}</Text>

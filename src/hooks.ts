@@ -1,27 +1,29 @@
-import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useLayoutEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { notifications } from "@mantine/notifications";
 
 import { useGetLeagueByIdQuery, useGetTeamByIdQuery } from "@/api";
 import errorStyles from "@/assets/styles/ErrorNotification.module.css";
-import { useAppSelector } from "@/store";
 
-export const useCheckTeam = () => {
+export const useCheckTeam = (teamId: string) => {
     const navigate = useNavigate();
-    const { teamId } = useParams();
 
-    const { selectedTeam } = useAppSelector((state) => state.teams);
+    const { isError, isFetching, data, error } = useGetTeamByIdQuery(teamId as string);
 
-    const { isError, isFetching, data } = useGetTeamByIdQuery(teamId as string, {
-        skip: !!selectedTeam
-    });
+    useLayoutEffect(() => {
+        if (isError && error) {
+            // @ts-ignore
+            const { status, data } = error;
+            let message: string = "Неотработанная ошибка";
 
-    useEffect(() => {
-        if (isError) {
+            if (status === 403) message = "Доступ к данным выбранной команды запрещен";
+            if (status === 400) message = "Данной команды не существует";
+            if (status === 429) message = "Превышен лимит запросов";
+
             notifications.show({
                 title: "Ошибка",
-                message: "Ошибка при загрузке команды",
+                message,
                 color: "#C33333",
                 classNames: errorStyles
             });
@@ -29,25 +31,27 @@ export const useCheckTeam = () => {
         }
     }, [isError]);
 
-    if (selectedTeam) return { team: selectedTeam, isFetching: false };
     return { team: data, isFetching };
 };
 
-export const useCheckLeague = () => {
+export const useCheckLeague = (leagueId: string) => {
     const navigate = useNavigate();
-    const { leagueId } = useParams();
 
-    const { selectedLeague } = useAppSelector((state) => state.leagues);
+    const { isError, isFetching, data, error } = useGetLeagueByIdQuery(leagueId as string);
 
-    const { isError, isFetching, data } = useGetLeagueByIdQuery(leagueId as string, {
-        skip: !!selectedLeague
-    });
+    useLayoutEffect(() => {
+        if (isError && error) {
+            // @ts-ignore
+            const { status, data } = error;
+            let message: string = "Неотработанная ошибка";
 
-    useEffect(() => {
-        if (isError) {
+            if (status === 403) message = "Доступ к данным выбранной лиги запрещен";
+            if (status === 400) message = "Данной лиги не существует";
+            if (status === 429) message = "Превышен лимит запросов";
+
             notifications.show({
                 title: "Ошибка",
-                message: "Ошибка при загрузке лиги",
+                message,
                 color: "#C33333",
                 classNames: errorStyles
             });
@@ -55,7 +59,6 @@ export const useCheckLeague = () => {
         }
     }, [isError]);
 
-    if (selectedLeague) return { league: selectedLeague, isFetching: false };
     return { league: data, isFetching };
 };
 

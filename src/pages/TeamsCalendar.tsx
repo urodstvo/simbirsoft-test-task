@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { Box, Breadcrumbs, Center, Flex, Loader, Pagination, Title } from "@mantine/core";
-import { DatePickerInput, DateValue, DatesProvider } from "@mantine/dates";
+import { DatePickerInput, DatesProvider, DatesRangeValue } from "@mantine/dates";
 
 import { useGetMatchesByTeamIdQuery } from "@/api";
 import styles from "@/assets/styles/LeaguesTeamsCalendar.module.css";
@@ -14,39 +14,26 @@ import { useCheckTeam, useSetTitle } from "@/hooks";
 import "dayjs/locale/ru";
 
 export const TeamsCalendar: FC = () => {
-    const { team, isFetching: isTeamFetching } = useCheckTeam();
+    const { teamId } = useParams();
+    const { team, isFetching: isTeamFetching } = useCheckTeam(teamId as string);
 
     useSetTitle("Календарь команды " + team?.name);
 
-    const { teamId } = useParams();
     const [page, setPage] = useState(1);
 
-    const [dateFrom, setDateFrom] = useState<DateValue>();
-    const [dateTo, setDateTo] = useState<DateValue>();
+    const [dates, setDates] = useState<DatesRangeValue>();
 
-    const [minDate, setMinDate] = useState<string>("");
-    const [maxDate, setMaxDate] = useState<string>("");
-
-    const [isFirstQuery, setIsFirstQuery] = useState<boolean>(true);
-
-    const { data, isSuccess, isError, isFetching, refetch } = useGetMatchesByTeamIdQuery({
-        id: teamId as string,
-        from: dateFrom?.toISOString().substring(0, 10) ?? minDate,
-        to: dateTo?.toISOString().substring(0, 10) ?? maxDate
-    });
+    const { data, isSuccess, isError, isFetching, refetch } = useGetMatchesByTeamIdQuery(
+        {
+            id: teamId as string,
+            from: dates?.[0]?.toISOString().substring(0, 10) ?? "",
+            to: dates?.[1]?.toISOString().substring(0, 10) ?? ""
+        },
+        { skip: !!dates?.[0] !== !!dates?.[1] }
+    );
 
     useEffect(() => {
         setPage(1);
-    }, [dateFrom, dateTo]);
-
-    useEffect(() => {
-        if (data) {
-            if (isFirstQuery) {
-                setMinDate(data.resultSet.first);
-                setMaxDate(data.resultSet.last);
-                setIsFirstQuery(false);
-            }
-        }
     }, [isSuccess]);
 
     return (
@@ -55,7 +42,7 @@ export const TeamsCalendar: FC = () => {
                 <Breadcrumbs separator={<BreadCrumbsSeparatorIcon />}>
                     <Link to="/teams">Команды</Link>
                     <span>
-                        {team && team.name}
+                        {!isTeamFetching && team && team.name}
                         {isTeamFetching && <Loader size="xs" />}
                     </span>
                 </Breadcrumbs>
@@ -72,30 +59,15 @@ export const TeamsCalendar: FC = () => {
                                 timezone: "UTC"
                             }}
                         >
-                            с
                             <DatePickerInput
-                                w={200}
+                                w={300}
                                 size="sm"
-                                placeholder="дд.мм.гггг"
-                                valueFormat="DD.MM.YYYY"
+                                type="range"
+                                onChange={setDates}
                                 rightSection={<CalendarIcon />}
                                 rightSectionPointerEvents="none"
-                                onChange={setDateFrom}
-                                minDate={new Date(Date.parse(minDate as string))}
-                                maxDate={new Date(Date.parse(maxDate as string))}
-                                disabled={!isSuccess}
-                            />
-                            по
-                            <DatePickerInput
-                                w={200}
-                                size="sm"
-                                placeholder="дд.мм.гггг"
+                                placeholder="дд.мм.гггг - дд.мм.гггг"
                                 valueFormat="DD.MM.YYYY"
-                                rightSection={<CalendarIcon />}
-                                rightSectionPointerEvents="none"
-                                onChange={setDateTo}
-                                minDate={new Date(Date.parse(minDate as string))}
-                                maxDate={new Date(Date.parse(maxDate as string))}
                                 disabled={!isSuccess}
                             />
                         </DatesProvider>

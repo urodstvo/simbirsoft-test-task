@@ -21,7 +21,7 @@ const filterLeagues = (data: Competition[], searchValue: string) => {
 export const Leagues: FC = () => {
     useSetTitle("Лиги");
 
-    const { data, isFetching, isSuccess, isError, refetch } = useGetAllCompetitionsQuery();
+    const { data, isFetching, isSuccess, isError, refetch, error } = useGetAllCompetitionsQuery();
 
     const [searchValue, setSearchValue] = useInputState<string>("");
     const [debouncedSearchValue] = useDebouncedValue(searchValue, 300);
@@ -86,7 +86,7 @@ export const Leagues: FC = () => {
                         <Loader />
                     </Container>
                 )}
-                {isError && <ErrorMessage refetch={refetch} />}
+                {isError && error && <ErrorMessage refetch={refetch} />}
             </Flex>
         </Flex>
     );

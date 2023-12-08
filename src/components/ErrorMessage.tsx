@@ -10,7 +10,7 @@ export const ErrorMessage: FC<{ refetch: () => unknown }> = ({ refetch }) => {
                 При загрузке данных произошла ошибка
             </Title>
             <Text size="h4" c="#444" ta="center">
-                Попробуйте немного подождать и попробовать снова
+                Превышено количество запросов. Пожалуйста, подождите минуту и попробуйте снова
             </Text>
             <Flex align="center" justify="center" rowGap={16} columnGap={32} w="100%" wrap="wrap" mt={48}>
                 <Button onClick={refetch}>Попробовать ещё раз</Button>
