@@ -1,21 +1,12 @@
 import { FC, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import {
-    Box,
-    Breadcrumbs,
-    Button,
-    Center,
-    Flex,
-    Loader,
-    Pagination,
-    Table,
-    Title
-} from "@mantine/core";
+import { Box, Breadcrumbs, Button, Center, Flex, Loader, Pagination, Title } from "@mantine/core";
 import { DatePickerInput, DateValue, DatesProvider } from "@mantine/dates";
 
 import { useGetMatchesByTeamIdQuery } from "@/api";
-import { MatchesTableRow } from "@/components/MatchesTableRow";
+import { ErrorMessage } from "@/components/ErrorMessage";
+import { MatchesTable } from "@/components/MatchesTable";
 import { BreadCrumbsSeparatorIcon } from "@/components/icons/BreadCrumbsSeparatorIcon";
 import { CalendarIcon } from "@/components/icons/CalendarIcon";
 import { useCheckTeam } from "@/hooks";
@@ -35,12 +26,11 @@ export const TeamsCalendar: FC = () => {
 
     const [isFirstQuery, setIsFirstQuery] = useState<boolean>(true);
 
-    const { data, isSuccess, isError, isFetching, refetch } =
-        useGetMatchesByTeamIdQuery({
-            id: teamId as string,
-            from: dateFrom?.toISOString().substring(0, 10) ?? minDate,
-            to: dateTo?.toISOString().substring(0, 10) ?? maxDate
-        });
+    const { data, isSuccess, isError, isFetching, refetch } = useGetMatchesByTeamIdQuery({
+        id: teamId as string,
+        from: dateFrom?.toISOString().substring(0, 10) ?? minDate,
+        to: dateTo?.toISOString().substring(0, 10) ?? maxDate
+    });
 
     useEffect(() => {
         if (data) {
@@ -92,12 +82,8 @@ export const TeamsCalendar: FC = () => {
                                 rightSection={<CalendarIcon />}
                                 rightSectionPointerEvents="none"
                                 onChange={setDateFrom}
-                                minDate={
-                                    new Date(Date.parse(minDate as string))
-                                }
-                                maxDate={
-                                    new Date(Date.parse(maxDate as string))
-                                }
+                                minDate={new Date(Date.parse(minDate as string))}
+                                maxDate={new Date(Date.parse(maxDate as string))}
                                 disabled={!isSuccess}
                             />
                             по
@@ -109,75 +95,33 @@ export const TeamsCalendar: FC = () => {
                                 rightSection={<CalendarIcon />}
                                 rightSectionPointerEvents="none"
                                 onChange={setDateTo}
-                                minDate={
-                                    new Date(Date.parse(minDate as string))
-                                }
-                                maxDate={
-                                    new Date(Date.parse(maxDate as string))
-                                }
+                                minDate={new Date(Date.parse(minDate as string))}
+                                maxDate={new Date(Date.parse(maxDate as string))}
                                 disabled={!isSuccess}
                             />
                         </DatesProvider>
                     </Flex>
                 </Box>
-                <Flex
-                    direction="column"
-                    align="center"
-                    justify="space-between"
-                    h="100%"
-                    w="100%"
-                    rowGap={16}
-                    mt={16}
-                >
-                    {!isFetching && data && (
+                <Flex direction="column" align="center" justify="space-between" h="100%" w="100%" rowGap={16} mt={16}>
+                    {!isFetching && data && data.matches.length > 0 && (
                         <>
-                            <Table withTableBorder>
-                                <Table.Tbody>
-                                    {data.matches
-                                        .slice(
-                                            0 + 11 * (page - 1),
-                                            11 + 11 * (page - 1)
-                                        )
-                                        .map((match) => (
-                                            <MatchesTableRow
-                                                key={match.id}
-                                                match={match}
-                                            />
-                                        ))}
-                                </Table.Tbody>
-                            </Table>
+                            <MatchesTable matches={data.matches} page={page} />
                             <Center p={16}>
-                                <Pagination
-                                    size="md"
-                                    total={Math.ceil(data.resultSet.count / 11)}
-                                    onChange={setPage}
-                                />
+                                <Pagination size="md" total={Math.ceil(data.resultSet.count / 10)} onChange={setPage} />
                             </Center>
                         </>
+                    )}
+                    {!isFetching && data && data.matches.length === 0 && (
+                        <Center>
+                            <Title size="h2">В указанном промежутке времени матчей не найдено</Title>
+                        </Center>
                     )}
                     {isFetching && (
                         <Center>
                             <Loader />
                         </Center>
                     )}
-                    {isError && (
-                        <Flex
-                            direction="column"
-                            align="center"
-                            justify="center"
-                            h="100%"
-                        >
-                            <Title size="h2">
-                                При загрузке матчей произошла ошибка.
-                            </Title>
-                            <Title size="h4" c="#444">
-                                Немного подождите и попробуйте ещё раз
-                            </Title>
-                            <Button mt={64} onClick={refetch}>
-                                Попробовать еще раз
-                            </Button>
-                        </Flex>
-                    )}
+                    {isError && !data && <ErrorMessage refetch={refetch} />}
                 </Flex>
             </Flex>
         </Flex>

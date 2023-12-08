@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Link, NavLink } from "react-router-dom";
 
-import { Badge, Table } from "@mantine/core";
+import { Badge, Table, Text } from "@mantine/core";
 
 import { useAppDispatch } from "@/store";
 import { setTeam } from "@/store/slices/team";
@@ -34,45 +34,37 @@ export const MatchesTableRow: FC<{ match: Match }> = ({ match }) => {
     const dispatch = useAppDispatch();
     return (
         <Table.Tr key={match.id}>
-            <Table.Td w={100}>{formattedDate}</Table.Td>
-            <Table.Td w={100}>{time}</Table.Td>
-            <Table.Td w={200}>
+            <Table.Td>{formattedDate}</Table.Td>
+            <Table.Td>{time}</Table.Td>
+            <Table.Td>
                 <Badge color="green" size="md" radius="xs" c="#fff">
                     {MatchStatus[match.status as keyof typeof MatchStatus]}
                 </Badge>
             </Table.Td>
             <Table.Td
-                w={250}
                 onClick={(e) => {
                     e.preventDefault();
                     dispatch(setTeam(match.homeTeam));
                 }}
             >
                 {match.homeTeam.name ? (
-                    <NavLink
-                        to={`/team/${match.homeTeam.id}`}
-                        style={{ color: "#000" }}
-                    >
-                        {match.homeTeam.name}
+                    <NavLink to={`/team/${match.homeTeam.id}`}>
+                        <Text c="#000">{match.homeTeam.name}</Text>
                     </NavLink>
                 ) : (
                     "TBA"
                 )}
             </Table.Td>
-            <Table.Td w={100}>—</Table.Td>
+            <Table.Td>—</Table.Td>
             <Table.Td
-                w={250}
                 onClick={(e) => {
                     e.preventDefault();
                     dispatch(setTeam(match.awayTeam));
                 }}
             >
                 {match.awayTeam ? (
-                    <NavLink
-                        to={`/team/${match.awayTeam.id}`}
-                        style={{ color: "#000" }}
-                    >
-                        {match.awayTeam.name}
+                    <NavLink to={`/team/${match.awayTeam.id}`}>
+                        <Text c="#000">{match.awayTeam.name}</Text>
                     </NavLink>
                 ) : (
                     "TBA"

@@ -18,24 +18,11 @@ export const LeagueCard: FC<{ league: Competition }> = ({ league }) => {
     } = league;
     const dispatch = useAppDispatch();
     return (
-        <motion.article
-            layout
-            className={styles.Container}
-            {...CardRenderAnimation}
-        >
-            <Link
-                to={`/league/${code}`}
-                onClick={() => dispatch(setLeague(league))}
-            >
-                <Stack
-                    w="100%"
-                    align="center"
-                    justify="center"
-                    p="32px 0 16px"
-                    gap={48}
-                >
-                    <Text>{name}</Text>
-                    <Text c="#888">{areaName}</Text>
+        <motion.article className={styles.Container} {...CardRenderAnimation}>
+            <Link to={`/league/${code}`} onClick={() => dispatch(setLeague(league))}>
+                <Stack className={styles.Content}>
+                    <Text className={styles.Name}>{name}</Text>
+                    <Text className={styles.Area}>{areaName}</Text>
                 </Stack>
             </Link>
         </motion.article>

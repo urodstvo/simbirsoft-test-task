@@ -14,18 +14,15 @@ export const useCheckTeam = () => {
     const { selectedTeam } = useAppSelector((state) => state.teams);
     if (selectedTeam) return { team: selectedTeam, isFetching: false };
 
-    const { isError, isFetching, data } = useGetTeamByIdQuery(
-        teamId as string,
-        {
-            skip: !!selectedTeam
-        }
-    );
+    const { isError, isFetching, data } = useGetTeamByIdQuery(teamId as string, {
+        skip: !!selectedTeam
+    });
 
     useEffect(() => {
         if (isError) {
             notifications.show({
                 title: "Ошибка",
-                message: "Такой команды не существует",
+                message: "Ошибка при загрузке команды",
                 color: "#C33333",
                 classNames: errorStyles
             });
@@ -43,18 +40,15 @@ export const useCheckLeague = () => {
     const { selectedLeague } = useAppSelector((state) => state.leagues);
     if (selectedLeague) return { league: selectedLeague, isFetching: false };
 
-    const { isError, isFetching, data } = useGetLeagueByIdQuery(
-        leagueId as string,
-        {
-            skip: !!selectedLeague
-        }
-    );
+    const { isError, isFetching, data } = useGetLeagueByIdQuery(leagueId as string, {
+        skip: !!selectedLeague
+    });
 
     useEffect(() => {
         if (isError) {
             notifications.show({
                 title: "Ошибка",
-                message: "Такой лиги не существует",
+                message: "Ошибка при загрузке лиги",
                 color: "#C33333",
                 classNames: errorStyles
             });
@@ -63,4 +57,10 @@ export const useCheckLeague = () => {
     }, [isError]);
 
     return { league: data, isFetching };
+};
+
+const useSetTitle = (title: string) => {
+    useEffect(() => {
+        document.title = title;
+    }, [title]);
 };
