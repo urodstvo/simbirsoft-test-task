@@ -1,10 +1,11 @@
 import { useRoutes } from "react-router-dom";
 
-import { Template } from "./pages";
-import { Leagues } from "./pages/Leagues";
-import { LeaguesCalendar } from "./pages/LeaguesCalendar";
-import { Teams } from "./pages/Teams";
-import { TeamsCalendar } from "./pages/TeamsCalendar";
+import { Template } from "@/pages";
+import { Leagues } from "@/pages/Leagues";
+import { LeaguesCalendar } from "@/pages/LeaguesCalendar";
+import { NotFound } from "@/pages/NotFound";
+import { Teams } from "@/pages/Teams";
+import { TeamsCalendar } from "@/pages/TeamsCalendar";
 
 export function App() {
     const router = useRoutes([
@@ -33,7 +34,7 @@ export function App() {
 
         {
             path: "*",
-            element: <div>404</div>
+            element: <NotFound />
         }
     ]);
 

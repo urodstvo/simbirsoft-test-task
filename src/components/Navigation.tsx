@@ -6,6 +6,8 @@ import { Box, Flex, Group, Image, Text } from "@mantine/core";
 import styles from "@/assets/styles/Navigation.module.css";
 import { motion } from "framer-motion";
 
+import { LogoIcon } from "./icons/LogoIcon";
+
 const NavigationLink: FC<{
     to: string;
     children: ReactNode;
@@ -27,7 +29,7 @@ export const Navigation: FC = () => {
     return (
         <Flex className={styles.Header}>
             <Box className={styles.LogoContainer}>
-                <Image className={styles.Logo} />
+                <LogoIcon />
             </Box>
             <Group className={styles.Navigation}>
                 <NavigationLink to="/" underlined={!!LeaguesMatch || !!LeagueMatch}>

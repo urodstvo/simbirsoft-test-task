@@ -24,7 +24,7 @@
     gap: 32px;
     width: var(--screen-width);
     height: 60px;
-    background: rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #eee;
 
     @media (min-width: 414px) {
         padding: 0 10px;
@@ -38,14 +38,8 @@
 }
 
 .LogoContainer {
-    width: 200px;
+    width: 210px;
     height: 50px;
-}
-
-.Logo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
 }
 
 .Navigation {

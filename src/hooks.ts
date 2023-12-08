@@ -59,8 +59,8 @@ export const useCheckLeague = () => {
     return { league: data, isFetching };
 };
 
-const useSetTitle = (title: string) => {
+export const useSetTitle = (title: string) => {
     useEffect(() => {
-        document.title = title;
+        document.title = `${title} | SockerStat`;
     }, [title]);
 };
