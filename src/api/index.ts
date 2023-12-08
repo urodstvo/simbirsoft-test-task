@@ -6,7 +6,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const Api = createApi({
     reducerPath: "Api",
     baseQuery: fetchBaseQuery({
-        baseUrl: "/api",
+        baseUrl: import.meta.env.VITE_API_URL,
         prepareHeaders: (headers) => {
             headers.set("X-Auth-Token", import.meta.env.VITE_API_TOKEN);
             headers.set("X-Unfold-Goals", String(true));

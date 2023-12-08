@@ -9,6 +9,7 @@ concurrency:
 
 env:
   VITE_API_TOKEN: ${{ secrets.VITE_API_TOKEN }}
+  VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
 jobs:
   build:
