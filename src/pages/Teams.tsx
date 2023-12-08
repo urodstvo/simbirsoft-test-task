@@ -4,6 +4,7 @@ import { Box, Center, Container, Flex, Loader, Pagination, SimpleGrid, TextInput
 import { useDebouncedValue, useInputState } from "@mantine/hooks";
 
 import { useGetAllTeamsQuery } from "@/api";
+import styles from "@/assets/styles/LeaguesTeams.module.css";
 import { ErrorMessage } from "@/components/ErrorMessage";
 import { TeamCard } from "@/components/TeamCard";
 import { SearchIcon } from "@/components/icons/SearchIcon";
@@ -39,18 +40,10 @@ export const Teams: FC = () => {
     }, [debouncedSearchValue]);
 
     return (
-        <Flex
-            component="main"
-            p="16px 40px"
-            w="var(--screen-width)"
-            align="stretch"
-            h="calc(100dvh - 60px)"
-            direction="column"
-            gap={16}
-        >
+        <Flex component="main" direction="column">
             <Box>
                 <TextInput
-                    w={300}
+                    className={styles.Search}
                     size="sm"
                     placeholder="Поиск"
                     rightSection={<SearchIcon />}
@@ -59,7 +52,7 @@ export const Teams: FC = () => {
                     onChange={setSearchValue}
                 />
             </Box>
-            <Flex direction="column" justify="space-between" columnGap={16} rowGap={32} h="100%">
+            <Flex direction="column" className={styles.Container}>
                 {isSuccess && (
                     <>
                         <SimpleGrid cols={{ sm: 2, md: 3, xl: 5 }}>
@@ -67,7 +60,7 @@ export const Teams: FC = () => {
                                 <TeamCard {...team} key={team.id} />
                             ))}
                         </SimpleGrid>
-                        <Center w="100%" p={16}>
+                        <Center className={styles.PaginationContainer}>
                             <Pagination total={Math.ceil(visibleTeams.length / 10)} size="md" onChange={setPage} />
                         </Center>
                     </>

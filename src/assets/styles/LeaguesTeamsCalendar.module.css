@@ -1,0 +1,23 @@
+.Container {
+    width: 100%;
+    height: 100%;
+}
+
+.CalendarContainer {
+    gap: 24px;
+    align-items: center;
+}
+
+.Calendar {
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    row-gap: 16px;
+    margin-top: 16px;
+}
+
+.PaginationContainer {
+    padding: 16px 0;
+    width: 100%;
+}

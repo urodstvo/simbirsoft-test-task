@@ -1,0 +1,15 @@
+.Search {
+    width: 300px;
+}
+
+.Container {
+    justify-content: space-between;
+    column-gap: 16px;
+    row-gap: 32px;
+    height: 100%;
+}
+
+.PaginationContainer {
+    width: 100%;
+    padding: 16px 0;
+}

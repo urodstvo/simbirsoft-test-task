@@ -5,7 +5,7 @@ import { Box, Breadcrumbs, Center, Flex, Loader, Pagination, Title } from "@mant
 import { DatePickerInput, DateValue, DatesProvider } from "@mantine/dates";
 
 import { useGetMatchesByLeagueIdQuery } from "@/api";
-import styles from "@/assets/styles/LeaguesCalendar.module.css";
+import styles from "@/assets/styles/LeaguesTeamsCalendar.module.css";
 import { ErrorMessage } from "@/components/ErrorMessage";
 import { MatchesTable } from "@/components/MatchesTable";
 import { BreadCrumbsSeparatorIcon } from "@/components/icons/BreadCrumbsSeparatorIcon";
@@ -46,7 +46,7 @@ export const LeaguesCalendar: FC = () => {
     }, [isSuccess]);
 
     return (
-        <Flex className={styles.Main} component="main" direction="column">
+        <Flex component="main" direction="column">
             <Box w="100%">
                 <Breadcrumbs separator={<BreadCrumbsSeparatorIcon />}>
                     <Link to="/">Лиги</Link>
@@ -56,12 +56,12 @@ export const LeaguesCalendar: FC = () => {
                     </span>
                 </Breadcrumbs>
             </Box>
-            <Flex w="100%" h="100%" direction="column">
+            <Flex direction="column" className={styles.Container}>
                 <Title w="100%" size="h2">
                     Матчи
                 </Title>
                 <Box>
-                    <Flex align="center" gap={24}>
+                    <Flex className={styles.CalendarContainer}>
                         <DatesProvider
                             settings={{
                                 locale: "ru",
@@ -97,11 +97,11 @@ export const LeaguesCalendar: FC = () => {
                         </DatesProvider>
                     </Flex>
                 </Box>
-                <Flex direction="column" align="center" justify="space-between" h="100%" w="100%" rowGap={16} mt={16}>
+                <Flex direction="column" className={styles.Calendar}>
                     {!isFetching && data && data.matches.length > 0 && (
                         <>
                             <MatchesTable matches={data.matches} page={page} />
-                            <Center p="16px 0" w="100%">
+                            <Center className={styles.PaginationContainer}>
                                 <Pagination size="md" total={Math.ceil(data.resultSet.count / 10)} onChange={setPage} />
                             </Center>
                         </>

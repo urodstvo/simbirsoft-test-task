@@ -4,7 +4,7 @@ import { Box, Center, Container, Flex, Loader, Pagination, SimpleGrid, TextInput
 import { useDebouncedValue, useInputState } from "@mantine/hooks";
 
 import { useGetAllCompetitionsQuery } from "@/api";
-import styles from "@/assets/styles/Leagues.module.css";
+import styles from "@/assets/styles/LeaguesTeams.module.css";
 import { ErrorMessage } from "@/components/ErrorMessage";
 import { LeagueCard } from "@/components/LeagueCard";
 import { SearchIcon } from "@/components/icons/SearchIcon";
@@ -42,18 +42,10 @@ export const Leagues: FC = () => {
     }, [debouncedSearchValue]);
 
     return (
-        <Flex
-            component="main"
-            p="16px 40px"
-            w="var(--screen-width)"
-            align="stretch"
-            h="calc(100dvh - 60px)"
-            direction="column"
-            gap={16}
-        >
+        <Flex component="main" direction="column">
             <Box>
                 <TextInput
-                    w={300}
+                    className={styles.Search}
                     size="sm"
                     placeholder="Поиск"
                     rightSection={<SearchIcon />}
@@ -62,15 +54,15 @@ export const Leagues: FC = () => {
                     onChange={setSearchValue}
                 />
             </Box>
-            <Flex direction="column" justify="space-between" columnGap={16} rowGap={32} h="100%">
+            <Flex direction="column" className={styles.Container}>
                 {isSuccess && (
                     <>
-                        <SimpleGrid className={styles.Grid} cols={{ lg: 3, md: 2, sm: 1 }}>
+                        <SimpleGrid cols={{ lg: 3, md: 2, sm: 1 }}>
                             {visibleLeagues.slice(0 + 9 * (page - 1), 9 + 9 * (page - 1)).map((league) => (
                                 <LeagueCard league={league} key={league.id} />
                             ))}
                         </SimpleGrid>
-                        <Center w="100%" p={16}>
+                        <Center className={styles.PaginationContainer}>
                             <Pagination total={Math.ceil(visibleLeagues.length / 9)} size="md" onChange={setPage} />
                         </Center>
                     </>
