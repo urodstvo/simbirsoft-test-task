@@ -145,12 +145,24 @@ table {
 }
 
 html,
-body {
+body,
+main {
     font-family: "Roboto", sans-serif;
+    min-width: 414px;
 }
 
-@media screen and (max-width: 890px) {
-    :root {
-        --screen-width: 414px;
+main {
+    padding: 16px 40px;
+    width: var(--screen-width);
+    align-items: stretch;
+    height: calc(100dvh - 60px);
+    gap: 16px;
+
+    @media (min-width: 414px) {
+        padding: 16px 10px;
+    }
+
+    @media (min-width: 768px) {
+        padding: 16px 40px;
     }
 }

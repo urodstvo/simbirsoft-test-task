@@ -1,14 +1,14 @@
 module.exports = {
     plugins: {
-      'postcss-preset-mantine': {},
-      'postcss-simple-vars': {
-        variables: {
-          'mantine-breakpoint-xs': '36em',
-          'mantine-breakpoint-sm': '48em',
-          'mantine-breakpoint-md': '62em',
-          'mantine-breakpoint-lg': '75em',
-          'mantine-breakpoint-xl': '88em',
-        },
-      },
-    },
-  };
+        "postcss-preset-mantine": {},
+        "postcss-simple-vars": {
+            variables: {
+                "mantine-breakpoint-xs": "0em",
+                "mantine-breakpoint-sm": "414px",
+                "mantine-breakpoint-md": "768px",
+                "mantine-breakpoint-lg": "896px",
+                "mantine-breakpoint-xl": "1300px"
+            }
+        }
+    }
+};

@@ -1,0 +1,22 @@
+.Table {
+    & * {
+        font-size: medium;
+
+        @media (max-width: 768px) {
+            font-size: x-small;
+        }
+    }
+
+    & td,
+    th {
+        @media (max-width: 768px) {
+            padding: 2px 5px;
+        }
+    }
+}
+
+.TableHead {
+    background-color: var(--mantine-color-blue-6);
+    color: #fff;
+    font-weight: 500;
+}
