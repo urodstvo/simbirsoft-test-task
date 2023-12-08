@@ -4,7 +4,7 @@ import { Table } from "@mantine/core";
 
 import styles from "@/assets/styles/MatchesTable.module.css";
 import { MatchesTableRow } from "@/components/MatchesTableRow";
-import type { Match } from "@/types/League";
+import type { Match } from "@/types/Match";
 
 export const MatchesTable: FC<{ matches: Array<Match>; page: number }> = ({ matches, page }) => {
     return (

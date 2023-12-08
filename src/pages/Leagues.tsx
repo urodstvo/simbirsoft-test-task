@@ -9,7 +9,7 @@ import { ErrorMessage } from "@/components/ErrorMessage";
 import { LeagueCard } from "@/components/LeagueCard";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { useSetTitle } from "@/hooks";
-import { Competition } from "@/types/League";
+import type { Competition } from "@/types/League";
 
 const filterLeagues = (data: Competition[], searchValue: string) => {
     const searchedMatches = data.filter((league) => {
@@ -49,6 +49,7 @@ export const Leagues: FC = () => {
                     size="sm"
                     placeholder="Поиск"
                     rightSection={<SearchIcon />}
+                    rightSectionPointerEvents="none"
                     disabled={isFetching || isError}
                     value={searchValue}
                     onChange={setSearchValue}
@@ -57,13 +58,26 @@ export const Leagues: FC = () => {
             <Flex direction="column" className={styles.Container}>
                 {isSuccess && (
                     <>
-                        <SimpleGrid cols={{ lg: 3, md: 2, sm: 1 }}>
-                            {visibleLeagues.slice(0 + 9 * (page - 1), 9 + 9 * (page - 1)).map((league) => (
-                                <LeagueCard league={league} key={league.id} />
-                            ))}
-                        </SimpleGrid>
+                        {visibleLeagues.length > 0 && (
+                            <SimpleGrid cols={{ lg: 3, md: 2, sm: 1 }}>
+                                {visibleLeagues.slice(0 + 9 * (page - 1), 9 + 9 * (page - 1)).map((league) => (
+                                    <LeagueCard league={league} key={league.id} />
+                                ))}
+                            </SimpleGrid>
+                        )}
+                        {visibleLeagues.length === 0 && (
+                            <Center>
+                                <p>Совпадений не найдено</p>
+                            </Center>
+                        )}
                         <Center className={styles.PaginationContainer}>
-                            <Pagination total={Math.ceil(visibleLeagues.length / 9)} size="md" onChange={setPage} />
+                            <Pagination
+                                defaultValue={1}
+                                value={page}
+                                total={Math.ceil(visibleLeagues.length / 9)}
+                                size="md"
+                                onChange={setPage}
+                            />
                         </Center>
                     </>
                 )}

@@ -1,4 +1,4 @@
-import { Team } from "@/types/League";
+import type { Team } from "@/types/Team";
 import { createSlice } from "@reduxjs/toolkit";
 
 type stateType = {

@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 import { NavLink, useMatch } from "react-router-dom";
 
-import { Box, Flex, Group, Image, Text } from "@mantine/core";
+import { Box, Flex, Group, Text } from "@mantine/core";
 
 import styles from "@/assets/styles/Navigation.module.css";
 import { motion } from "framer-motion";

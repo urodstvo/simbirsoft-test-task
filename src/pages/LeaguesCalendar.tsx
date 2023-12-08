@@ -36,6 +36,10 @@ export const LeaguesCalendar: FC = () => {
     });
 
     useEffect(() => {
+        setPage(1);
+    }, [dateFrom, dateTo]);
+
+    useEffect(() => {
         if (data) {
             if (isFirstQuery) {
                 setMinDate(data.resultSet.first);
@@ -98,11 +102,16 @@ export const LeaguesCalendar: FC = () => {
                     </Flex>
                 </Box>
                 <Flex direction="column" className={styles.Calendar}>
-                    {!isFetching && data && data.matches.length > 0 && (
+                    {!isError && !isFetching && data && data.matches.length > 0 && (
                         <>
                             <MatchesTable matches={data.matches} page={page} />
                             <Center className={styles.PaginationContainer}>
-                                <Pagination size="md" total={Math.ceil(data.resultSet.count / 10)} onChange={setPage} />
+                                <Pagination
+                                    defaultValue={1}
+                                    size="md"
+                                    total={Math.ceil(data.resultSet.count / 10)}
+                                    onChange={setPage}
+                                />
                             </Center>
                         </>
                     )}
@@ -116,7 +125,7 @@ export const LeaguesCalendar: FC = () => {
                             <Loader />
                         </Center>
                     )}
-                    {isError && !data && <ErrorMessage refetch={refetch} />}
+                    {isError && <ErrorMessage refetch={refetch} />}
                 </Flex>
             </Flex>
         </Flex>

@@ -47,6 +47,7 @@ export const Teams: FC = () => {
                     size="sm"
                     placeholder="Поиск"
                     rightSection={<SearchIcon />}
+                    rightSectionPointerEvents="none"
                     disabled={isLoading || isError}
                     value={searchValue}
                     onChange={setSearchValue}
@@ -55,13 +56,25 @@ export const Teams: FC = () => {
             <Flex direction="column" className={styles.Container}>
                 {isSuccess && (
                     <>
-                        <SimpleGrid cols={{ sm: 2, md: 3, xl: 5 }}>
-                            {visibleTeams.slice(0 + 10 * (page - 1), 10 + 10 * (page - 1)).map((team) => (
-                                <TeamCard {...team} key={team.id} />
-                            ))}
-                        </SimpleGrid>
+                        {visibleTeams.length > 0 && (
+                            <SimpleGrid cols={{ sm: 2, md: 3, xl: 5 }}>
+                                {visibleTeams.slice(0 + 10 * (page - 1), 10 + 10 * (page - 1)).map((team) => (
+                                    <TeamCard {...team} key={team.id} />
+                                ))}
+                            </SimpleGrid>
+                        )}
+                        {visibleTeams.length === 0 && (
+                            <Center>
+                                <p>Совпадений не найдено</p>
+                            </Center>
+                        )}
                         <Center className={styles.PaginationContainer}>
-                            <Pagination total={Math.ceil(visibleTeams.length / 10)} size="md" onChange={setPage} />
+                            <Pagination
+                                defaultValue={1}
+                                total={Math.ceil(visibleTeams.length / 10)}
+                                size="md"
+                                onChange={setPage}
+                            />
                         </Center>
                     </>
                 )}

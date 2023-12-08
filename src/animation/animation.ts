@@ -1,6 +1,8 @@
 export const CardRenderAnimation: any = {
+    // layout: true,
     initial: { opacity: 0 },
     animate: { opacity: 1 },
-    whileTap: { scale: 0.975 },
-    transition: { duration: 0.4 }
+    exit: { opacity: 0 },
+    whileHover: { scale: 1.05 },
+    transition: { type: "spring", duration: 0.75 }
 };

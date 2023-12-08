@@ -52,7 +52,7 @@ export const StatusBadge: FC<{ variant: MatchStatus }> = ({ variant }) => {
     }
 
     return (
-        <Badge color={badgeColor} size="md" radius="xs" c={textColor}>
+        <Badge color={badgeColor} size="sm" fz="xs" fw="normal" radius="xs" c={textColor}>
             {variant}
         </Badge>
     );

@@ -1,4 +1,4 @@
-import { Competition } from "@/types/League";
+import type { Competition } from "@/types/League";
 import { createSlice } from "@reduxjs/toolkit";
 
 type stateType = {
