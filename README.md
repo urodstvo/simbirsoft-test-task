@@ -16,7 +16,7 @@ https://urodstvo.github.io/simbirsoft-test-task/
 * Mantine UI KIT
 * Framer Motion
 * Redux Toolkit
-* API - https://www.football-data.org/v4/
+* API - https://www.football-data.org/v4/ (10 запросов / минута)
 
 ## Проблемы с CORS #
 Для использования API со стороны разработанного клиента было решено использовать свой Proxy Server без ограничений:
