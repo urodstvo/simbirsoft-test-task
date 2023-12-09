@@ -14,7 +14,7 @@ export const useCheckTeam = (teamId: string) => {
     useLayoutEffect(() => {
         if (isError && error) {
             // @ts-ignore
-            const { status, data } = error;
+            const { status } = error;
             let message: string = "Неотработанная ошибка";
 
             if (status === 403) message = "Доступ к данным выбранной команды запрещен";
@@ -42,7 +42,7 @@ export const useCheckLeague = (leagueId: string) => {
     useLayoutEffect(() => {
         if (isError && error) {
             // @ts-ignore
-            const { status, data } = error;
+            const { status } = error;
             let message: string = "Неотработанная ошибка";
 
             if (status === 403) message = "Доступ к данным выбранной лиги запрещен";

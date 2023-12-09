@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
 import { MantineProvider, createTheme, em } from "@mantine/core";
@@ -11,7 +10,9 @@ import "@mantine/notifications/styles.css";
 
 import { App } from "@/App.tsx";
 import "@/index.css";
-import store from "@/store";
+import { ApiProvider } from "@reduxjs/toolkit/query/react";
+
+import { Api } from "./api";
 
 const theme = createTheme({
     fontFamily: "Roboto, sans-serif",
@@ -22,10 +23,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <BrowserRouter basename="/simbirsoft-test-task/">
             <MantineProvider theme={theme}>
-                <Provider store={store}>
+                <ApiProvider api={Api}>
                     <Notifications />
                     <App />
-                </Provider>
+                </ApiProvider>
             </MantineProvider>
         </BrowserRouter>
     </React.StrictMode>
